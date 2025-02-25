@@ -1,25 +1,120 @@
-### Project Overview
+# Correcting the syntax and saving the readme file
 
-This project involves preparing a dataset of skin lesion images and their corresponding masks for model training. The dataset consists of over 10,000 rows, where each row contains an image of a skin lesion and a target value (0 or 1) representing the type of lesion.
+readme_content = """
+# Skin Lesion Classification & Segmentation Project
 
-### Image Preprocessing
+This project focuses on the classification and segmentation of skin lesions using a large dataset of images and their corresponding segmentation masks.
 
-To prepare the images and masks for model training:
+## Project Overview
 
-1. **Resizing and Padding**:  
-   - The original images are of size **600x450** pixels. To standardize the dataset and maintain the aspect ratio, we resize each image and its corresponding mask to the target size (e.g., **256x256** pixels).
-   - Since resizing might distort the aspect ratio, padding is added to the images and masks to ensure they fit within the target size without cropping the original content. The padding is applied symmetrically, ensuring the image is centered.
+### Dataset
+The dataset consists of images of skin lesions, each associated with a target value (either 0 or 1), indicating the presence of one of 7 different types of lesions:
 
-2. **Directories**:
-   - The resized images are stored in the folder **`images_resized`**.
-   - The resized masks are stored in the folder **`masks_resized`**.
+- MEL (Melanoma)
+- NV (Melanocytic Nevus)
+- BCC (Basal Cell Carcinoma)
+- AKIEC (Actinic Keratosis)
+- BKL (Benign Keratosis-like Lesions)
+- DF (Dermatofibroma)
+- VASC (Vascular Lesions)
 
-### Script Used for Preprocessing
+Each image has a corresponding segmentation mask indicating the region of the lesion. 
 
-A Python script utilizing the `Pillow` library (PIL) was used for the following tasks:
-- Load images and masks from the **`Images`** and **`Masks`** directories.
-- Resize the images and masks while maintaining their aspect ratios.
-- Add padding to ensure that the images and masks fit within the target size (256x256 pixels).
-- Save the resized and padded images and masks in the respective **`images_resized`** and **`masks_resized`** directories.
+### Goal
+- **Classification**: Classify the type of lesion (7 categories).
+- **Segmentation**: Detect and segment the region of the lesion.
 
-This preprocessing ensures the dataset is ready for model training while preserving the original content and structure of the images.
+---
+
+## Steps Taken
+
+### 1️⃣ Data Preprocessing
+
+#### Image and Mask Resizing
+To ensure that all images and masks are of the same size and compatible for training, we resized both:
+- **Images**: Resized to a uniform size of 256x256 pixels, maintaining the aspect ratio by adding padding where necessary.
+- **Masks**: Corresponding masks were resized in the same way, ensuring they align with the images.
+
+#### Python Code:
+```python
+# Resizing images and masks (code example)
+from PIL import Image
+import os
+
+def resize_and_pad(image, target_size=(256, 256), mode="RGB"):
+    # Function implementation for resizing and padding images
+    pass
+```
+
+---
+
+### 2️⃣ Exploratory Data Analysis (EDA)
+
+We performed **EDA** to understand the distribution of lesion types and ensure the dataset is properly formatted:
+
+#### Steps Taken:
+- **Visualized sample images and masks** to ensure correct alignment.
+- **Checked pixel distributions** for both images and masks.
+- **Examined class distribution** to detect imbalance in the dataset:
+  - Found that the dataset is highly imbalanced, with `NV` having the largest number of samples and `DF`, `VASC` underrepresented.
+
+#### Class Distribution:
+- MEL = 1113
+- NV = 6705
+- BCC = 514
+- AKIEC = 327
+- BKL = 1099
+- DF = 115
+- VASC = 142
+
+---
+
+### 3️⃣ Balancing the Dataset
+
+Since the dataset is **imbalanced**, we decided to **balance the classes** using a combination of:
+- **Undersampling** the dominant class (`NV`).
+- **Oversampling** underrepresented classes (`DF` and `VASC`).
+
+The goal was to **balance the dataset** around the size of the `BKL` class (1,099 samples).
+
+#### Updated Dataset:
+- **Under-sampled** dominant classes to reduce size to 1,099.
+- **Over-sampled** smaller classes to increase them to 1,099 using random duplication.
+
+#### Python Code:
+```python
+import pandas as pd
+
+# Balance the dataset by undersampling/oversampling
+df_balanced = pd.DataFrame()
+
+for lesion in target_columns:
+    class_subset = df[df[lesion] == 1]  # Get all samples for this class
+    
+    if len(class_subset) > target_count:
+        # UNDERSAMPLE (reduce class size)
+        class_subset = class_subset.sample(target_count, random_state=42)
+    else:
+        # OVERSAMPLE (duplicate data to increase size)
+        class_subset = class_subset.sample(target_count, replace=True, random_state=42)
+    
+    df_balanced = pd.concat([df_balanced, class_subset])  # Add to final dataset
+
+# Shuffle the dataset and save it as 'balanced_dataset.csv'
+df_balanced = df_balanced.sample(frac=1, random_state=42).reset_index(drop=True)
+```
+
+---
+
+### Next Steps
+1. **Data Splitting**: Split the dataset into training, validation, and test sets (80/10/10 split).
+2. **Data Augmentation**: Apply augmentation techniques to prevent overfitting on oversampled classes.
+3. **Model Selection**: Choose an appropriate model (ResNet for classification, U-Net for segmentation).
+4. **Model Training**: Train the model and evaluate using relevant metrics.
+
+---
+
+## Requirements
+- Python 3.x
+- Libraries: pandas, numpy, matplotlib, PIL, scikit-learn, tensorflow/keras (for model training)
+

@@ -1,5 +1,3 @@
-# Correcting the syntax and saving the readme file
-
 readme_content = """
 # Skin Lesion Classification & Segmentation Project
 

@@ -1,7 +1,7 @@
 readme_content = """
 # Skin Lesion Classification & Segmentation Project
 
-This project focuses on the classification and segmentation of skin lesions using a large dataset of images and their corresponding segmentation masks.
+This project focuses on the classification of skin lesions using a dataset of images.
 
 ## Project Overview
 
@@ -16,11 +16,8 @@ The dataset consists of images of skin lesions, each associated with a target va
 - DF (Dermatofibroma)
 - VASC (Vascular Lesions)
 
-Each image has a corresponding segmentation mask indicating the region of the lesion. 
-
 ### Goal
-- **Classification**: Classify the type of lesion (7 categories).
-- **Segmentation**: Detect and segment the region of the lesion.
+- **Classification** Categorize the 7 types of skin lesions into two targets—malignant or benign—and accurately classify each lesion using a predictive model.
 
 ---
 

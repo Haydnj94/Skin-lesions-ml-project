@@ -39,5 +39,5 @@ The project utilizes deep learning models to classify skin lesions based on thei
 ### 1️⃣ Data Preprocessing
 
 #### Image and Mask Resizing
-To ensure that all images and masks are of the same size and compatible for training, we resized both:
+To ensure that all images are of the same size and compatible for training, we resized them:
 - **Images**: Resized to a uniform size of 256x256 pixels, maintaining the aspect ratio by adding padding where necessary.
